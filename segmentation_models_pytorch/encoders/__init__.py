@@ -16,6 +16,9 @@ from .timm_resnest import timm_resnest_encoders
 from .timm_res2net import timm_res2net_encoders
 from .timm_regnet import timm_regnet_encoders
 from .timm_sknet import timm_sknet_encoders
+from .timm_mobilenetv3 import timm_mobilenetv3_encoders
+from .timm_gernet import timm_gernet_encoders
+
 from ._preprocessing import preprocess_input
 
 encoders = {}
@@ -34,6 +37,8 @@ encoders.update(timm_resnest_encoders)
 encoders.update(timm_res2net_encoders)
 encoders.update(timm_regnet_encoders)
 encoders.update(timm_sknet_encoders)
+encoders.update(timm_mobilenetv3_encoders)
+encoders.update(timm_gernet_encoders)
 
 
 def get_encoder(name, in_channels=3, depth=5, weights=None):
@@ -56,7 +61,7 @@ def get_encoder(name, in_channels=3, depth=5, weights=None):
             ))
         encoder.load_state_dict(model_zoo.load_url(settings["url"]))
 
-    encoder.set_in_channels(in_channels)
+    encoder.set_in_channels(in_channels, pretrained=weights is not None)
 
     return encoder
 

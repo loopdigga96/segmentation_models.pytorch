@@ -35,8 +35,8 @@ class SkNetEncoder(ResNet, EncoderMixin):
         return features
 
     def load_state_dict(self, state_dict, **kwargs):
-        state_dict.pop("fc.bias")
-        state_dict.pop("fc.weight")
+        state_dict.pop("fc.bias", None)
+        state_dict.pop("fc.weight", None)
         super().load_state_dict(state_dict, **kwargs)
 
 
@@ -74,7 +74,7 @@ timm_sknet_encoders = {
             'block': SelectiveKernelBasic,
             'layers': [2, 2, 2, 2],
             'zero_init_last_bn': False,
-            'block_args': {'sk_kwargs': {'min_attn_channels': 16, 'attn_reduction': 8, 'split_input': True}}
+            'block_args': {'sk_kwargs': {'rd_ratio': 1/8, 'split_input': True}}
         }
     },
     'timm-skresnet34': {
@@ -85,7 +85,7 @@ timm_sknet_encoders = {
             'block': SelectiveKernelBasic,
             'layers': [3, 4, 6, 3],
             'zero_init_last_bn': False,
-            'block_args': {'sk_kwargs': {'min_attn_channels': 16, 'attn_reduction': 8, 'split_input': True}}
+            'block_args': {'sk_kwargs': {'rd_ratio': 1/8, 'split_input': True}}
         }
     },
     'timm-skresnext50_32x4d': {

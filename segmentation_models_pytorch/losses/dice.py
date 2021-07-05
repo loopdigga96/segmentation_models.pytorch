@@ -104,7 +104,7 @@ class DiceLoss(_Loss):
                 y_pred = y_pred * mask
                 y_true = y_true * mask
 
-        scores = soft_dice_score(y_pred, y_true.type_as(y_pred), smooth=self.smooth, eps=self.eps, dims=dims)
+        scores = self.compute_score(y_pred, y_true.type_as(y_pred), smooth=self.smooth, eps=self.eps, dims=dims)
 
         if self.log_loss:
             loss = -torch.log(scores.clamp_min(self.eps))
@@ -122,4 +122,10 @@ class DiceLoss(_Loss):
         if self.classes is not None:
             loss = loss[self.classes]
 
+        return self.aggregate_loss(loss)
+
+    def aggregate_loss(self, loss):
         return loss.mean()
+
+    def compute_score(self, output, target, smooth=0.0, eps=1e-7, dims=None) -> torch.Tensor:
+        return soft_dice_score(output, target, smooth, eps, dims)
